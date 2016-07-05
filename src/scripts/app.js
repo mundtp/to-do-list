@@ -1,15 +1,34 @@
-const React = require('react'),
-	ReactDOM = require('react-dom')
+import ReactDOM from 'react-dom'
+import React from 'react'
+import HomeView from './HomeView'
+
+import Backbone from 'backbone'
+
 
 const app = function() {
 
-	const Header = React.createClass({
-		render: () => {
-			return <h1>YOLO</h1>
+    const TaskModel = Backbone.Model.extend({
+    })
+
+    const TaskCollection = Backbone.Collection.extend({
+        model: TaskModel
+    })
+
+    var TaskRouter = Backbone.Router.extend({
+		routes: {	
+			"*catchall": "showHomeView"
+		},
+
+		showHomeView: function(searchTerm) {
+			ReactDOM.render(<HomeView taskColl={new TaskCollection()} />,document.querySelector('.container'))
+		},
+		initialize: function() {
+			Backbone.history.start()
 		}
 	})
 
-	ReactDOM.render(<Header/>,document.querySelector('.container'))
+	new TaskRouter()
+
 }
 
 app()
