@@ -77,7 +77,9 @@ const HomeView = React.createClass({
 const TaskList = React.createClass({
 
     _getTaskComponents: function(taskColl) {
-        return taskColl.map((mod) => <Task taskModel={mod} _addDone={this.props._addDone} _removeDone={this.props._removeDone} _addUndone={this.props._addUndone} _removeUndone={this.props._removeUndone}/>)
+        return taskColl.map((mod) => {
+            return <Task taskModel={mod} key={mod.cid} _addDone={this.props._addDone} _removeDone={this.props._removeDone} _addUndone={this.props._addUndone} _removeUndone={this.props._removeUndone}/>
+        })
     },
 
     render: function() {
@@ -109,6 +111,7 @@ const Task = React.createClass({
             
         }
     },
+
     _doFunc: function(e){
        if(e.target.checked){
         this.props._addDone(this.props.taskModel)
@@ -121,14 +124,22 @@ const Task = React.createClass({
     },
 
     render: function() {
+        console.log(this)
+
+        if (this.props.taskModel.get('done')) {
+            var inputJsx = <input checked="true" type='checkbox' onChange={this._doFunc}/>
+        }
+        else {
+            var inputJsx = <input type='checkbox' onChange={this._doFunc}/>
+        }
 
         return (
             <div className="task">
                 <span className="name">{this.props.taskModel.get('name')}
                     <input className='inputDescription' placeholder="enter description" onKeyDown={this._addDescription} onChange={this._changeRSVP}/>
                     <input className='inputDueDate' placeholder="enter due date" onKeyDown={this._addDueDate}/>
-                
-                <a id='checkbox'>Done?</a><input type='checkbox' onChange={this._doFunc}/>
+                    <input type='checkbox' onChange={this._doFunc}/>
+                <a id='checkbox'>Done?</a>
                 <button onClick={this._killTask}>X</button></span>
             </div>
             )
